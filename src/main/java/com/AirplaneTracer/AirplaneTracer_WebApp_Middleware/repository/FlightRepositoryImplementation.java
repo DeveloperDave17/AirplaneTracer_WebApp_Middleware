@@ -1,6 +1,7 @@
 package com.AirplaneTracer.AirplaneTracer_WebApp_Middleware.repository;
 
 import com.AirplaneTracer.AirplaneTracer_WebApp_Middleware.DBUtil;
+import com.AirplaneTracer.AirplaneTracer_WebApp_Middleware.Query;
 import com.AirplaneTracer.AirplaneTracer_WebApp_Middleware.model.Flight;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,15 +23,16 @@ public class FlightRepositoryImplementation implements FlightRepository {
     }
 
     @Override
-    public List<Flight> getFlights(String date) {
+    public List<Flight> getFlights(Query query) {
 
         List<Flight> FlightList = new ArrayList<>();
 
         try {
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_date = ?");
-            stmt.setString(1,date);
+            stmt.setString(1,query.getFtopDate());
             ResultSet rs = stmt.executeQuery();
 
+            System.out.println(query.getFtopDate());
 
             while(rs.next()){
                 int flightId = rs.getInt(1);
