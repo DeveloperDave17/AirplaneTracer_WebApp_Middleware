@@ -35,9 +35,64 @@ public class FlightRepositoryImplementation implements FlightRepository {
 
         try {
             if(query.getFtopDate().equals("")){
-                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight");
+                if (query.getFtopFairfield().equals("") && query.getFbottomFairfield().equals("")) {
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight");
 
-                rs=stmt.executeQuery();
+                    rs = stmt.executeQuery();
+                } else if (query.getFbottomFairfield().equals("") && query.getFtopArrival().equals("Arrival")) {
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE arrival_airport = ?");
+
+                    stmt.setString(1, query.getFtopFairfield());
+
+                    rs = stmt.executeQuery();
+                } else if (query.getFtopFairfield().equals("") && query.getFbottomArrival().equals("Arrival")) {
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE arrival_airport = ?");
+
+                    stmt.setString(1, query.getFbottomFairfield());
+
+                    rs = stmt.executeQuery();
+                } else if (query.getFbottomFairfield().equals("") && query.getFtopDeparture().equals("Departure")) {
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_airport = ?");
+
+                    stmt.setString(1, query.getFtopFairfield());
+
+                    rs = stmt.executeQuery();
+                } else if (query.getFtopFairfield().equals("") && query.getFbottomDeparture().equals("Departure")) {
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_airport = ?");
+
+                    stmt.setString(1, query.getFbottomFairfield());
+
+                    rs = stmt.executeQuery();
+                } else if (query.getFtopArrival().equals("Arrival") && query.getFbottomDeparture().equals("Departure")) {
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE " +
+                            "arrival_airport = ? AND departure_airport = ?");
+
+                    stmt.setString(1, query.getFtopFairfield());
+                    stmt.setString(2, query.getFbottomFairfield());
+
+
+                    rs = stmt.executeQuery();
+                } else if (query.getFtopDeparture().equals("Departure") && query.getFbottomArrival().equals("Arrival")) {
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE " +
+                            "arrival_airport = ? AND departure_airport = ?");
+
+                    stmt.setString(1, query.getFbottomFairfield());
+                    stmt.setString(2, query.getFtopFairfield());
+
+
+                    rs = stmt.executeQuery();
+                } else {
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE" +
+                            " arrival_airport = ? OR departure_airport = ?");
+
+
+                    stmt.setString(1, query.getFtopFairfield());
+                    stmt.setString(2, query.getFtopFairfield());
+
+                    rs = stmt.executeQuery();
+                }
+
+
 
             } else if(query.getFtopTime().equals("")){
 
@@ -45,15 +100,17 @@ public class FlightRepositoryImplementation implements FlightRepository {
                 String datetimeUpperBound = getDateUpperBound(query);
 
                 if (query.getFtopFairfield().equals("") && query.getFbottomFairfield().equals("")) {
-                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime >= ?" +
-                            "AND arrival_datetime <= ?");
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE (departure_datetime >= ?" +
+                            " AND departure_datetime <= ?) OR ( arrival_datetime >= ? AND arrival_datetime <= ?)");
 
                     stmt.setString(1, datetimeLowerBound);
                     stmt.setString(2, datetimeUpperBound);
+                    stmt.setString(3, datetimeLowerBound);
+                    stmt.setString(4, datetimeUpperBound);
 
                     rs = stmt.executeQuery();
                 } else if (query.getFbottomFairfield().equals("") && query.getFtopArrival().equals("Arrival")) {
-                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime >= ?" +
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE arrival_datetime >= ?" +
                             "AND arrival_datetime <= ? AND arrival_airport = ?");
 
                     stmt.setString(1, datetimeLowerBound);
@@ -62,7 +119,7 @@ public class FlightRepositoryImplementation implements FlightRepository {
 
                     rs = stmt.executeQuery();
                 } else if (query.getFtopFairfield().equals("") && query.getFbottomArrival().equals("Arrival")) {
-                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime >= ?" +
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE arrival_datetime >= ?" +
                             "AND arrival_datetime <= ? AND arrival_airport = ?");
 
                     stmt.setString(1, datetimeLowerBound);
@@ -72,7 +129,7 @@ public class FlightRepositoryImplementation implements FlightRepository {
                     rs = stmt.executeQuery();
                 } else if (query.getFbottomFairfield().equals("") && query.getFtopDeparture().equals("Departure")) {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime >= ?" +
-                            "AND arrival_datetime <= ? AND departure_airport = ?");
+                            "AND departure_datetime <= ? AND departure_airport = ?");
 
                     stmt.setString(1, datetimeLowerBound);
                     stmt.setString(2, datetimeUpperBound);
@@ -81,7 +138,7 @@ public class FlightRepositoryImplementation implements FlightRepository {
                     rs = stmt.executeQuery();
                 } else if (query.getFtopFairfield().equals("") && query.getFbottomDeparture().equals("Departure")) {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime >= ?" +
-                            "AND arrival_datetime <= ? AND departure_airport = ?");
+                            "AND departure_datetime <= ? AND departure_airport = ?");
 
                     stmt.setString(1, datetimeLowerBound);
                     stmt.setString(2, datetimeUpperBound);
@@ -89,7 +146,7 @@ public class FlightRepositoryImplementation implements FlightRepository {
 
                     rs = stmt.executeQuery();
                 } else if (query.getFtopArrival().equals("Arrival") && query.getFbottomDeparture().equals("Departure")) {
-                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime >= ?" +
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE arrival_datetime >= ?" +
                             "AND arrival_datetime <= ? AND arrival_airport = ? AND departure_airport = ?");
 
                     stmt.setString(1, datetimeLowerBound);
@@ -101,7 +158,7 @@ public class FlightRepositoryImplementation implements FlightRepository {
                     rs = stmt.executeQuery();
                 } else if (query.getFtopDeparture().equals("Departure") && query.getFbottomArrival().equals("Arrival")) {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime >= ?" +
-                            "AND arrival_datetime <= ? AND arrival_airport = ? AND departure_airport = ?");
+                            "AND departure_datetime <= ? AND arrival_airport = ? AND departure_airport = ?");
 
                     stmt.setString(1, datetimeLowerBound);
                     stmt.setString(2, datetimeUpperBound);
@@ -112,7 +169,7 @@ public class FlightRepositoryImplementation implements FlightRepository {
                     rs = stmt.executeQuery();
                 } else {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime >= ?" +
-                            "AND arrival_datetime <= ? AND (arrival_airport = ? OR departure_airport = ?)");
+                            "AND departure_datetime <= ? AND (arrival_airport = ? OR departure_airport = ?)");
 
                     stmt.setString(1, datetimeLowerBound);
                     stmt.setString(2, datetimeUpperBound);
