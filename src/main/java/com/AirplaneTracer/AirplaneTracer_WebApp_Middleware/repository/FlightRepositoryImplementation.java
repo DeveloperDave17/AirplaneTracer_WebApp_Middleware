@@ -32,88 +32,176 @@ public class FlightRepositoryImplementation implements FlightRepository {
 
         ResultSet rs;
 
-        String datetime = getDateTime(query);
-
-        System.out.println(datetime);
 
         try {
-            if(query.getFtopFairfield().equals("") && query.getFbottomFairfield().equals("")){
-                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime <= ?" +
-                        "AND arrival_datetime >= ?");
+            if(query.getFtopDate().equals("")){
+                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight");
 
-                stmt.setString(1, datetime);
-                stmt.setString(2, datetime);
+                rs=stmt.executeQuery();
 
-                rs = stmt.executeQuery();
-            } else if(query.getFbottomFairfield().equals("") && query.getFtopArrival().equals("Arrival")){
-                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime <= ?" +
-                        "AND arrival_datetime >= ? AND arrival_airport = ?");
+            } else if(query.getFtopTime().equals("")){
 
-                stmt.setString(1, datetime);
-                stmt.setString(2, datetime);
-                stmt.setString(3, query.getFtopFairfield());
+                String datetimeLowerBound = getDateLowerBound(query);
+                String datetimeUpperBound = getDateUpperBound(query);
 
-                rs = stmt.executeQuery();
-            } else if(query.getFtopFairfield().equals("") && query.getFbottomArrival().equals("Arrival")){
-                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime <= ?" +
-                        "AND arrival_datetime >= ? AND arrival_airport = ?");
+                if (query.getFtopFairfield().equals("") && query.getFbottomFairfield().equals("")) {
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime >= ?" +
+                            "AND arrival_datetime <= ?");
 
-                stmt.setString(1, datetime);
-                stmt.setString(2, datetime);
-                stmt.setString(3, query.getFbottomFairfield());
+                    stmt.setString(1, datetimeLowerBound);
+                    stmt.setString(2, datetimeUpperBound);
 
-                rs = stmt.executeQuery();
-            } else if(query.getFbottomFairfield().equals("") && query.getFtopDeparture().equals("Departure")){
-                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime <= ?" +
-                        "AND arrival_datetime >= ? AND departure_airport = ?");
+                    rs = stmt.executeQuery();
+                } else if (query.getFbottomFairfield().equals("") && query.getFtopArrival().equals("Arrival")) {
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime >= ?" +
+                            "AND arrival_datetime <= ? AND arrival_airport = ?");
 
-                stmt.setString(1, datetime);
-                stmt.setString(2, datetime);
-                stmt.setString(3, query.getFtopFairfield());
+                    stmt.setString(1, datetimeLowerBound);
+                    stmt.setString(2, datetimeUpperBound);
+                    stmt.setString(3, query.getFtopFairfield());
 
-                rs = stmt.executeQuery();
-            } else if (query.getFtopFairfield().equals("") && query.getFbottomDeparture().equals("Departure")){
-                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime <= ?" +
-                        "AND arrival_datetime >= ? AND departure_airport = ?");
+                    rs = stmt.executeQuery();
+                } else if (query.getFtopFairfield().equals("") && query.getFbottomArrival().equals("Arrival")) {
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime >= ?" +
+                            "AND arrival_datetime <= ? AND arrival_airport = ?");
 
-                stmt.setString(1, datetime);
-                stmt.setString(2, datetime);
-                stmt.setString(3, query.getFbottomFairfield());
+                    stmt.setString(1, datetimeLowerBound);
+                    stmt.setString(2, datetimeUpperBound);
+                    stmt.setString(3, query.getFbottomFairfield());
 
-                rs = stmt.executeQuery();
-            }
-            else if(query.getFtopArrival().equals("Arrival") && query.getFbottomDeparture().equals("Departure")) {
-                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime <= ?" +
-                        "AND arrival_datetime >= ? AND arrival_airport = ? AND departure_airport = ?");
+                    rs = stmt.executeQuery();
+                } else if (query.getFbottomFairfield().equals("") && query.getFtopDeparture().equals("Departure")) {
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime >= ?" +
+                            "AND arrival_datetime <= ? AND departure_airport = ?");
 
-                stmt.setString(1, datetime);
-                stmt.setString(2, datetime);
-                stmt.setString(3, query.getFtopFairfield());
-                stmt.setString(4, query.getFbottomFairfield());
+                    stmt.setString(1, datetimeLowerBound);
+                    stmt.setString(2, datetimeUpperBound);
+                    stmt.setString(3, query.getFtopFairfield());
 
+                    rs = stmt.executeQuery();
+                } else if (query.getFtopFairfield().equals("") && query.getFbottomDeparture().equals("Departure")) {
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime >= ?" +
+                            "AND arrival_datetime <= ? AND departure_airport = ?");
 
-                rs = stmt.executeQuery();
-            } else if (query.getFtopDeparture().equals("Departure") && query.getFbottomArrival().equals("Arrival")){
-                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime <= ?" +
-                        "AND arrival_datetime >= ? AND arrival_airport = ? AND departure_airport = ?");
+                    stmt.setString(1, datetimeLowerBound);
+                    stmt.setString(2, datetimeUpperBound);
+                    stmt.setString(3, query.getFbottomFairfield());
 
-                stmt.setString(1, datetime);
-                stmt.setString(2, datetime);
-                stmt.setString(3, query.getFbottomFairfield());
-                stmt.setString(4, query.getFtopFairfield());
+                    rs = stmt.executeQuery();
+                } else if (query.getFtopArrival().equals("Arrival") && query.getFbottomDeparture().equals("Departure")) {
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime >= ?" +
+                            "AND arrival_datetime <= ? AND arrival_airport = ? AND departure_airport = ?");
+
+                    stmt.setString(1, datetimeLowerBound);
+                    stmt.setString(2, datetimeUpperBound);
+                    stmt.setString(3, query.getFtopFairfield());
+                    stmt.setString(4, query.getFbottomFairfield());
 
 
-                rs = stmt.executeQuery();
-            } else {
-                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime <= ?" +
-                        "AND arrival_datetime >= ? AND (arrival_airport = ? OR departure_airport = ?)");
+                    rs = stmt.executeQuery();
+                } else if (query.getFtopDeparture().equals("Departure") && query.getFbottomArrival().equals("Arrival")) {
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime >= ?" +
+                            "AND arrival_datetime <= ? AND arrival_airport = ? AND departure_airport = ?");
 
-                stmt.setString(1, datetime);
-                stmt.setString(2, datetime);
-                stmt.setString(3, query.getFtopFairfield());
-                stmt.setString(4, query.getFtopFairfield());
+                    stmt.setString(1, datetimeLowerBound);
+                    stmt.setString(2, datetimeUpperBound);
+                    stmt.setString(3, query.getFbottomFairfield());
+                    stmt.setString(4, query.getFtopFairfield());
 
-                rs = stmt.executeQuery();
+
+                    rs = stmt.executeQuery();
+                } else {
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime >= ?" +
+                            "AND arrival_datetime <= ? AND (arrival_airport = ? OR departure_airport = ?)");
+
+                    stmt.setString(1, datetimeLowerBound);
+                    stmt.setString(2, datetimeUpperBound);
+                    stmt.setString(3, query.getFtopFairfield());
+                    stmt.setString(4, query.getFtopFairfield());
+
+                    rs = stmt.executeQuery();
+                }
+            }else {
+
+                String datetime = getDateTime(query);
+
+                if (query.getFtopFairfield().equals("") && query.getFbottomFairfield().equals("")) {
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime <= ?" +
+                            "AND arrival_datetime >= ?");
+
+                    stmt.setString(1, datetime);
+                    stmt.setString(2, datetime);
+
+                    rs = stmt.executeQuery();
+                } else if (query.getFbottomFairfield().equals("") && query.getFtopArrival().equals("Arrival")) {
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime <= ?" +
+                            "AND arrival_datetime >= ? AND arrival_airport = ?");
+
+                    stmt.setString(1, datetime);
+                    stmt.setString(2, datetime);
+                    stmt.setString(3, query.getFtopFairfield());
+
+                    rs = stmt.executeQuery();
+                } else if (query.getFtopFairfield().equals("") && query.getFbottomArrival().equals("Arrival")) {
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime <= ?" +
+                            "AND arrival_datetime >= ? AND arrival_airport = ?");
+
+                    stmt.setString(1, datetime);
+                    stmt.setString(2, datetime);
+                    stmt.setString(3, query.getFbottomFairfield());
+
+                    rs = stmt.executeQuery();
+                } else if (query.getFbottomFairfield().equals("") && query.getFtopDeparture().equals("Departure")) {
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime <= ?" +
+                            "AND arrival_datetime >= ? AND departure_airport = ?");
+
+                    stmt.setString(1, datetime);
+                    stmt.setString(2, datetime);
+                    stmt.setString(3, query.getFtopFairfield());
+
+                    rs = stmt.executeQuery();
+                } else if (query.getFtopFairfield().equals("") && query.getFbottomDeparture().equals("Departure")) {
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime <= ?" +
+                            "AND arrival_datetime >= ? AND departure_airport = ?");
+
+                    stmt.setString(1, datetime);
+                    stmt.setString(2, datetime);
+                    stmt.setString(3, query.getFbottomFairfield());
+
+                    rs = stmt.executeQuery();
+                } else if (query.getFtopArrival().equals("Arrival") && query.getFbottomDeparture().equals("Departure")) {
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime <= ?" +
+                            "AND arrival_datetime >= ? AND arrival_airport = ? AND departure_airport = ?");
+
+                    stmt.setString(1, datetime);
+                    stmt.setString(2, datetime);
+                    stmt.setString(3, query.getFtopFairfield());
+                    stmt.setString(4, query.getFbottomFairfield());
+
+
+                    rs = stmt.executeQuery();
+                } else if (query.getFtopDeparture().equals("Departure") && query.getFbottomArrival().equals("Arrival")) {
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime <= ?" +
+                            "AND arrival_datetime >= ? AND arrival_airport = ? AND departure_airport = ?");
+
+                    stmt.setString(1, datetime);
+                    stmt.setString(2, datetime);
+                    stmt.setString(3, query.getFbottomFairfield());
+                    stmt.setString(4, query.getFtopFairfield());
+
+
+                    rs = stmt.executeQuery();
+                } else {
+                    PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime <= ?" +
+                            "AND arrival_datetime >= ? AND (arrival_airport = ? OR departure_airport = ?)");
+
+                    stmt.setString(1, datetime);
+                    stmt.setString(2, datetime);
+                    stmt.setString(3, query.getFtopFairfield());
+                    stmt.setString(4, query.getFtopFairfield());
+
+                    rs = stmt.executeQuery();
+                }
             }
 
             while(rs.next()){
@@ -172,6 +260,37 @@ public class FlightRepositoryImplementation implements FlightRepository {
         } else{
             time = query.getFtopTime();
         }
+
+        if (query.getFtopDate().equals("")){
+            LocalDate localDate = LocalDate.now();
+            date = localDate.toString();
+        } else{
+            date = query.getFtopDate();
+        }
+
+        return date + " " + time;
+    }
+
+
+    private String getDateLowerBound(Query query){
+        String date;
+        String time;
+        time = "00:00:00";
+
+        if (query.getFtopDate().equals("")){
+            LocalDate localDate = LocalDate.now();
+            date = localDate.toString();
+        } else{
+            date = query.getFtopDate();
+        }
+
+        return date + " " + time;
+    }
+
+    private String getDateUpperBound(Query query){
+        String date;
+        String time;
+        time = "23:59:59";
 
         if (query.getFtopDate().equals("")){
             LocalDate localDate = LocalDate.now();
