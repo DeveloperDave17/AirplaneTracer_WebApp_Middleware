@@ -27,7 +27,7 @@ public class WebAppController {
     }
 
     @CrossOrigin("http://localhost:3000")
-    @PostMapping(path = {"/resultsAirPlaneTracer"})
+    @PostMapping(path = {"/resultsAirplaneTracer"})
     @ResponseBody
     public Iterable<List<Waypoint>> getWaypoints(@RequestBody List<Integer> flightIds)
     { return this.flightRepository.getWaypoints(flightIds);}
