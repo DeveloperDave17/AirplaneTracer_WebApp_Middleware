@@ -4,6 +4,7 @@ import com.AirplaneTracer.AirplaneTracer_WebApp_Middleware.DBUtil;
 import com.AirplaneTracer.AirplaneTracer_WebApp_Middleware.Query;
 import com.AirplaneTracer.AirplaneTracer_WebApp_Middleware.model.Flight;
 import com.AirplaneTracer.AirplaneTracer_WebApp_Middleware.model.Waypoint;
+import org.hibernate.type.descriptor.DateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -264,12 +265,18 @@ public class FlightRepositoryImplementation implements FlightRepository {
             while(rs.next()){
                 int flightId = rs.getInt(1);
                 String icao24 = rs.getString(2);
+                String callsign = rs.getString(3);
                 String departureAirport = rs.getString(6);
                 String arrivalAirport = rs.getString(7);
                 String departureDateTime = rs.getString(8);
                 String arrivalDateTime = rs.getString(9);
+                Long duration = rs.getLong(10);
+                Long hours = duration / 3600;
+                Long minutes = (duration % 3600) / 60;
+                Long seconds = duration % 60;
+                String durationString = String.format("%02d:%02d:%02d",hours,minutes,seconds);
 
-                Flight flight = new Flight(flightId, icao24, departureAirport, departureDateTime, arrivalDateTime, arrivalAirport);
+                Flight flight = new Flight(flightId, icao24, callsign, departureAirport, departureDateTime, arrivalDateTime, arrivalAirport,durationString);
                 FlightList.add(flight);
             }
         } catch (SQLException e) {

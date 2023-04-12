@@ -44,17 +44,7 @@ class AirplaneTracerWebAppMiddlewareApplicationTests {
 
 		List<Flight> flightList2 = flightRepository.getFlights(query);
 
-		int flightNum = 0;
-		for (Flight flight: flightList){
-			Assertions.assertEquals(flight.getFlightId(),flightList2.get(flightNum).getFlightId());
-			Assertions.assertEquals(flight.getIcao24(),flightList2.get(flightNum).getIcao24());
-			Assertions.assertEquals(flight.getDepartureAirport(),flightList2.get(flightNum).getDepartureAirport());
-			Assertions.assertEquals(flight.getArrivalAirport(),flightList2.get(flightNum).getArrivalAirport());
-			Assertions.assertEquals(flight.getDepartureDateTime(),flightList2.get(flightNum).getDepartureDateTime());
-			Assertions.assertEquals(flight.getArrivalDateTime(),flightList2.get(flightNum).getArrivalDateTime());
-
-			flightNum++;
-		}
+		assertEquals(flightList,flightList2);
 
 	}
 
@@ -71,17 +61,7 @@ class AirplaneTracerWebAppMiddlewareApplicationTests {
 
 		List<Flight> flightList2 = flightRepository.getFlights(query);
 
-		int flightNum = 0;
-		for (Flight flight: flightList){
-			Assertions.assertEquals(flight.getFlightId(),flightList2.get(flightNum).getFlightId());
-			Assertions.assertEquals(flight.getIcao24(),flightList2.get(flightNum).getIcao24());
-			Assertions.assertEquals(flight.getDepartureAirport(),flightList2.get(flightNum).getDepartureAirport());
-			Assertions.assertEquals(flight.getArrivalAirport(),flightList2.get(flightNum).getArrivalAirport());
-			Assertions.assertEquals(flight.getDepartureDateTime(),flightList2.get(flightNum).getDepartureDateTime());
-			Assertions.assertEquals(flight.getArrivalDateTime(),flightList2.get(flightNum).getArrivalDateTime());
-
-			flightNum++;
-		}
+		assertEquals(flightList,flightList2);
 	}
 
 	// Only an arrival airport is submitted in the top text field
@@ -96,17 +76,7 @@ class AirplaneTracerWebAppMiddlewareApplicationTests {
 
 		List<Flight> flightList2 = flightRepository.getFlights(query);
 
-		int flightNum = 0;
-		for (Flight flight: flightList){
-			Assertions.assertEquals(flight.getFlightId(),flightList2.get(flightNum).getFlightId());
-			Assertions.assertEquals(flight.getIcao24(),flightList2.get(flightNum).getIcao24());
-			Assertions.assertEquals(flight.getDepartureAirport(),flightList2.get(flightNum).getDepartureAirport());
-			Assertions.assertEquals(flight.getArrivalAirport(),flightList2.get(flightNum).getArrivalAirport());
-			Assertions.assertEquals(flight.getDepartureDateTime(),flightList2.get(flightNum).getDepartureDateTime());
-			Assertions.assertEquals(flight.getArrivalDateTime(),flightList2.get(flightNum).getArrivalDateTime());
-
-			flightNum++;
-		}
+		assertEquals(flightList,flightList2);
 	}
 
 	// Only a departure airfield is specified in the top text field
@@ -121,17 +91,7 @@ class AirplaneTracerWebAppMiddlewareApplicationTests {
 
 		List<Flight> flightList2 = flightRepository.getFlights(query);
 
-		int flightNum = 0;
-		for (Flight flight: flightList){
-			Assertions.assertEquals(flight.getFlightId(),flightList2.get(flightNum).getFlightId());
-			Assertions.assertEquals(flight.getIcao24(),flightList2.get(flightNum).getIcao24());
-			Assertions.assertEquals(flight.getDepartureAirport(),flightList2.get(flightNum).getDepartureAirport());
-			Assertions.assertEquals(flight.getArrivalAirport(),flightList2.get(flightNum).getArrivalAirport());
-			Assertions.assertEquals(flight.getDepartureDateTime(),flightList2.get(flightNum).getDepartureDateTime());
-			Assertions.assertEquals(flight.getArrivalDateTime(),flightList2.get(flightNum).getArrivalDateTime());
-
-			flightNum++;
-		}
+		assertEquals(flightList,flightList2);
 	}
 
 	// Only an arrival airport is submitted in the bottom text field
@@ -146,17 +106,7 @@ class AirplaneTracerWebAppMiddlewareApplicationTests {
 
 		List<Flight> flightList2 = flightRepository.getFlights(query);
 
-		int flightNum = 0;
-		for (Flight flight: flightList){
-			Assertions.assertEquals(flight.getFlightId(),flightList2.get(flightNum).getFlightId());
-			Assertions.assertEquals(flight.getIcao24(),flightList2.get(flightNum).getIcao24());
-			Assertions.assertEquals(flight.getDepartureAirport(),flightList2.get(flightNum).getDepartureAirport());
-			Assertions.assertEquals(flight.getArrivalAirport(),flightList2.get(flightNum).getArrivalAirport());
-			Assertions.assertEquals(flight.getDepartureDateTime(),flightList2.get(flightNum).getDepartureDateTime());
-			Assertions.assertEquals(flight.getArrivalDateTime(),flightList2.get(flightNum).getArrivalDateTime());
-
-			flightNum++;
-		}
+		assertEquals(flightList,flightList2);
 	}
 
 	// Only a departure airport is submitted in the bottom text field
@@ -171,17 +121,7 @@ class AirplaneTracerWebAppMiddlewareApplicationTests {
 
 		List<Flight> flightList2 = flightRepository.getFlights(query);
 
-		int flightNum = 0;
-		for (Flight flight: flightList){
-			Assertions.assertEquals(flight.getFlightId(),flightList2.get(flightNum).getFlightId());
-			Assertions.assertEquals(flight.getIcao24(),flightList2.get(flightNum).getIcao24());
-			Assertions.assertEquals(flight.getDepartureAirport(),flightList2.get(flightNum).getDepartureAirport());
-			Assertions.assertEquals(flight.getArrivalAirport(),flightList2.get(flightNum).getArrivalAirport());
-			Assertions.assertEquals(flight.getDepartureDateTime(),flightList2.get(flightNum).getDepartureDateTime());
-			Assertions.assertEquals(flight.getArrivalDateTime(),flightList2.get(flightNum).getArrivalDateTime());
-
-			flightNum++;
-		}
+		assertEquals(flightList,flightList2);
 	}
 
 	// Only an arrival airfield is submitted in the top slot and a departure airfield in the bottom slot
@@ -197,17 +137,7 @@ class AirplaneTracerWebAppMiddlewareApplicationTests {
 
 		List<Flight> flightList2 = flightRepository.getFlights(query);
 
-		int flightNum = 0;
-		for (Flight flight: flightList){
-			Assertions.assertEquals(flight.getFlightId(),flightList2.get(flightNum).getFlightId());
-			Assertions.assertEquals(flight.getIcao24(),flightList2.get(flightNum).getIcao24());
-			Assertions.assertEquals(flight.getDepartureAirport(),flightList2.get(flightNum).getDepartureAirport());
-			Assertions.assertEquals(flight.getArrivalAirport(),flightList2.get(flightNum).getArrivalAirport());
-			Assertions.assertEquals(flight.getDepartureDateTime(),flightList2.get(flightNum).getDepartureDateTime());
-			Assertions.assertEquals(flight.getArrivalDateTime(),flightList2.get(flightNum).getArrivalDateTime());
-
-			flightNum++;
-		}
+		assertEquals(flightList,flightList2);
 	}
 
 	// A departure airfield is submitted in the top slot and an arrival airfield is submitted in the bottom slot
@@ -223,17 +153,7 @@ class AirplaneTracerWebAppMiddlewareApplicationTests {
 
 		List<Flight> flightList2 = flightRepository.getFlights(query);
 
-		int flightNum = 0;
-		for (Flight flight: flightList){
-			Assertions.assertEquals(flight.getFlightId(),flightList2.get(flightNum).getFlightId());
-			Assertions.assertEquals(flight.getIcao24(),flightList2.get(flightNum).getIcao24());
-			Assertions.assertEquals(flight.getDepartureAirport(),flightList2.get(flightNum).getDepartureAirport());
-			Assertions.assertEquals(flight.getArrivalAirport(),flightList2.get(flightNum).getArrivalAirport());
-			Assertions.assertEquals(flight.getDepartureDateTime(),flightList2.get(flightNum).getDepartureDateTime());
-			Assertions.assertEquals(flight.getArrivalDateTime(),flightList2.get(flightNum).getArrivalDateTime());
-
-			flightNum++;
-		}
+		assertEquals(flightList,flightList2);
 	}
 
 	// An airfield is specified with the Both radio button selected and a date is provided
@@ -249,17 +169,7 @@ class AirplaneTracerWebAppMiddlewareApplicationTests {
 
 		List<Flight> flightList2 = flightRepository.getFlights(query);
 
-		int flightNum = 0;
-		for (Flight flight: flightList){
-			Assertions.assertEquals(flight.getFlightId(),flightList2.get(flightNum).getFlightId());
-			Assertions.assertEquals(flight.getIcao24(),flightList2.get(flightNum).getIcao24());
-			Assertions.assertEquals(flight.getDepartureAirport(),flightList2.get(flightNum).getDepartureAirport());
-			Assertions.assertEquals(flight.getArrivalAirport(),flightList2.get(flightNum).getArrivalAirport());
-			Assertions.assertEquals(flight.getDepartureDateTime(),flightList2.get(flightNum).getDepartureDateTime());
-			Assertions.assertEquals(flight.getArrivalDateTime(),flightList2.get(flightNum).getArrivalDateTime());
-
-			flightNum++;
-		}
+		assertEquals(flightList,flightList2);
 	}
 
 	// An arrival airport is submitted in the top text field with a date
@@ -275,17 +185,7 @@ class AirplaneTracerWebAppMiddlewareApplicationTests {
 
 		List<Flight> flightList2 = flightRepository.getFlights(query);
 
-		int flightNum = 0;
-		for (Flight flight: flightList){
-			Assertions.assertEquals(flight.getFlightId(),flightList2.get(flightNum).getFlightId());
-			Assertions.assertEquals(flight.getIcao24(),flightList2.get(flightNum).getIcao24());
-			Assertions.assertEquals(flight.getDepartureAirport(),flightList2.get(flightNum).getDepartureAirport());
-			Assertions.assertEquals(flight.getArrivalAirport(),flightList2.get(flightNum).getArrivalAirport());
-			Assertions.assertEquals(flight.getDepartureDateTime(),flightList2.get(flightNum).getDepartureDateTime());
-			Assertions.assertEquals(flight.getArrivalDateTime(),flightList2.get(flightNum).getArrivalDateTime());
-
-			flightNum++;
-		}
+		assertEquals(flightList,flightList2);
 	}
 
 	// A departure airfield is submitted in the top slot with a date
@@ -301,17 +201,7 @@ class AirplaneTracerWebAppMiddlewareApplicationTests {
 
 		List<Flight> flightList2 = flightRepository.getFlights(query);
 
-		int flightNum = 0;
-		for (Flight flight: flightList){
-			Assertions.assertEquals(flight.getFlightId(),flightList2.get(flightNum).getFlightId());
-			Assertions.assertEquals(flight.getIcao24(),flightList2.get(flightNum).getIcao24());
-			Assertions.assertEquals(flight.getDepartureAirport(),flightList2.get(flightNum).getDepartureAirport());
-			Assertions.assertEquals(flight.getArrivalAirport(),flightList2.get(flightNum).getArrivalAirport());
-			Assertions.assertEquals(flight.getDepartureDateTime(),flightList2.get(flightNum).getDepartureDateTime());
-			Assertions.assertEquals(flight.getArrivalDateTime(),flightList2.get(flightNum).getArrivalDateTime());
-
-			flightNum++;
-		}
+		assertEquals(flightList,flightList2);
 	}
 
 	// An arrival airport is submitted in the bottom text field with a date
@@ -327,6 +217,186 @@ class AirplaneTracerWebAppMiddlewareApplicationTests {
 
 		List<Flight> flightList2 = flightRepository.getFlights(query);
 
+		assertEquals(flightList,flightList2);
+	}
+
+	// A departure airport is submitted in the bottom text field with a date
+	@Test
+	void departureBottomWithDate() throws SQLException {
+		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE arrival_datetime <= '2023-03-30 23:59:59'" +
+				"AND arrival_datetime >= '2023-03-30 00:00:00' AND" +
+				" departure_airport = 'Eppley Airfield'");
+		ResultSet rs = stmt.executeQuery();
+		List<Flight> flightList = processResults(rs);
+		Query query = new Query("","","","","2023-03-30","",
+				"Eppley Airfield","Departure","");
+
+		List<Flight> flightList2 = flightRepository.getFlights(query);
+
+		assertEquals(flightList,flightList2);
+	}
+
+	// An arrival airport and a departure airport is submitted in the bottom text field with a date
+	@Test
+	void arrivalTopDepartureBottomWithDate() throws SQLException {
+		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE" +
+				" departure_airport = 'Edinburgh Airport' AND arrival_airport = 'Dublin Airport'" +
+				" AND arrival_datetime <= '2023-03-30 23:59:59' AND arrival_datetime >= '2023-03-30 00:00:00'");
+		ResultSet rs = stmt.executeQuery();
+		List<Flight> flightList = processResults(rs);
+		Query query = new Query("Dublin Airport","","Arrival","","2023-03-30","",
+				"Edinburgh Airport","Departure","");
+
+		List<Flight> flightList2 = flightRepository.getFlights(query);
+
+		assertEquals(flightList,flightList2);
+	}
+
+	// An arrival airport is submitted in the bottom slot and a departure airport is submitted in the top text field with a date
+	@Test
+	void arrivalBottomDepartureTopWithDate() throws SQLException {
+		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE" +
+				" departure_airport = 'Edinburgh Airport' AND arrival_airport = 'Dublin Airport'" +
+				" AND departure_datetime <= '2023-03-30 23:59:59' AND departure_datetime >= '2023-03-30 00:00:00'");
+		ResultSet rs = stmt.executeQuery();
+		List<Flight> flightList = processResults(rs);
+		Query query = new Query("Edinburgh Airport","Departure","","","2023-03-30","",
+				"Dublin Airport","","Arrival");
+
+		List<Flight> flightList2 = flightRepository.getFlights(query);
+
+		assertEquals(flightList,flightList2);
+	}
+
+	// A both airfield is submitted in the top text field with a date and time
+	@Test
+	void bothWithDateAndTime() throws SQLException {
+		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE" +
+				" (departure_airport = 'Dublin Airport' OR arrival_airport = 'Dublin Airport')" +
+				" AND departure_datetime <= '2023-03-30 08:00:00' AND arrival_datetime >= '2023-03-30 08:00:00'");
+		ResultSet rs = stmt.executeQuery();
+		List<Flight> flightList = processResults(rs);
+		Query query = new Query("Dublin Airport","","","Both","2023-03-30","08:00:00",
+				"","","");
+
+		List<Flight> flightList2 = flightRepository.getFlights(query);
+
+		assertEquals(flightList,flightList2);
+	}
+
+	// An arrival airfield is submitted in the top text field with a date and time
+	@Test
+	void arrivalTopWithDateAndTime() throws SQLException {
+		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE" +
+				" arrival_airport = 'Dublin Airport'" +
+				" AND departure_datetime <= '2023-03-30 08:00:00' AND arrival_datetime >= '2023-03-30 08:00:00'");
+		ResultSet rs = stmt.executeQuery();
+		List<Flight> flightList = processResults(rs);
+		Query query = new Query("Dublin Airport","","Arrival","","2023-03-30","08:00:00",
+				"","","");
+
+		List<Flight> flightList2 = flightRepository.getFlights(query);
+
+		assertEquals(flightList,flightList2);
+	}
+
+	// A departure airfield is submitted in the top text field with a date and time
+	@Test
+	void departureTopWithDateAndTime() throws SQLException {
+		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE" +
+				" departure_airport = 'Dublin Airport'" +
+				" AND departure_datetime <= '2023-03-30 08:00:00' AND arrival_datetime >= '2023-03-30 08:00:00'");
+		ResultSet rs = stmt.executeQuery();
+		List<Flight> flightList = processResults(rs);
+		Query query = new Query("Dublin Airport","Departure","","","2023-03-30","08:00:00",
+				"","","");
+
+		List<Flight> flightList2 = flightRepository.getFlights(query);
+		assertEquals(flightList,flightList2);
+	}
+
+	// An arrival airport is submitted in the bottom text field along with a date and time
+	@Test
+	void arrivalBottomWithDateAndTime() throws SQLException {
+		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE" +
+				" arrival_airport = 'Dublin Airport'" +
+				" AND departure_datetime <= '2023-03-30 08:00:00' AND arrival_datetime >= '2023-03-30 08:00:00'");
+		ResultSet rs = stmt.executeQuery();
+		List<Flight> flightList = processResults(rs);
+		Query query = new Query("","","","","2023-03-30","08:00:00",
+				"Dublin Airport","","Arrival");
+
+		List<Flight> flightList2 = flightRepository.getFlights(query);
+		assertEquals(flightList,flightList2);
+	}
+
+	// A departure airport is submitted in the bottom text field along with a date and time
+	@Test
+	void departureBottomWithDateAndTime() throws SQLException {
+		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE" +
+				" departure_airport = 'Dublin Airport'" +
+				" AND departure_datetime <= '2023-03-30 08:00:00' AND arrival_datetime >= '2023-03-30 08:00:00'");
+		ResultSet rs = stmt.executeQuery();
+		List<Flight> flightList = processResults(rs);
+		Query query = new Query("","","","","2023-03-30","08:00:00",
+				"Dublin Airport","Departure","");
+
+		List<Flight> flightList2 = flightRepository.getFlights(query);
+		assertEquals(flightList,flightList2);
+	}
+
+	// An arrival airport is submitted in the top text field and a departure airport is submitted in the bottom text field along with a date and time
+	@Test
+	void arrivalTopDepartureBottomWithDateAndTime() throws SQLException {
+		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE" +
+				" departure_airport = 'Milan Bergamo Airport' and arrival_airport = 'Dublin Airport'" +
+				" AND departure_datetime <= '2023-03-30 08:00:00' AND arrival_datetime >= '2023-03-30 08:00:00'");
+		ResultSet rs = stmt.executeQuery();
+		List<Flight> flightList = processResults(rs);
+		Query query = new Query("Dublin Airport","","Arrival","","2023-03-30","08:00:00",
+				"Milan Bergamo Airport","Departure","");
+
+		List<Flight> flightList2 = flightRepository.getFlights(query);
+		assertEquals(flightList,flightList2);
+	}
+
+	// A departure airport is submitted in the top text field and an arrival airport is submitted in the bottom text field along with a date and time
+	@Test
+	void departureTopArrivalBottomWithDateAndTime() throws SQLException {
+		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE" +
+				" departure_airport = 'Milan Bergamo Airport' and arrival_airport = 'Dublin Airport'" +
+				" AND departure_datetime <= '2023-03-30 08:00:00' AND arrival_datetime >= '2023-03-30 08:00:00'");
+		ResultSet rs = stmt.executeQuery();
+		List<Flight> flightList = processResults(rs);
+		Query query = new Query("Milan Bergamo Airport","Departure","","","2023-03-30","08:00:00",
+				"Dublin Airport","","Arrival");
+
+		List<Flight> flightList2 = flightRepository.getFlights(query);
+		assertEquals(flightList,flightList2);
+	}
+
+	List<Flight> processResults(ResultSet rs) throws SQLException {
+		List<Flight> flightList = new ArrayList<>();
+		while(rs.next()){
+			int flightId = rs.getInt(1);
+			String icao24 = rs.getString(2);
+			String callsign = rs.getString(3);
+			String departureAirport = rs.getString(6);
+			String arrivalAirport = rs.getString(7);
+			String departureDateTime = rs.getString(8);
+			String arrivalDateTime = rs.getString(9);
+			Long duration = rs.getLong(10);
+			Long hours = duration / 3600;
+			Long minutes = (duration % 3600) / 60;
+			Long seconds = duration % 60;
+			String durationString = String.format("%02d:%02d:%02d",hours,minutes,seconds);
+			Flight flight = new Flight(flightId, icao24, callsign, departureAirport, departureDateTime, arrivalDateTime, arrivalAirport,durationString);
+			flightList.add(flight);
+		}
+		return flightList;
+	}
+
+	public void assertEquals(List<Flight> flightList, List<Flight> flightList2){
 		int flightNum = 0;
 		for (Flight flight: flightList){
 			Assertions.assertEquals(flight.getFlightId(),flightList2.get(flightNum).getFlightId());
@@ -338,22 +408,6 @@ class AirplaneTracerWebAppMiddlewareApplicationTests {
 
 			flightNum++;
 		}
-	}
-
-	List<Flight> processResults(ResultSet rs) throws SQLException {
-		List<Flight> flightList = new ArrayList<>();
-		while(rs.next()){
-			int flightId = rs.getInt(1);
-			String icao24 = rs.getString(2);
-			String departureAirport = rs.getString(6);
-			String arrivalAirport = rs.getString(7);
-			String departureDateTime = rs.getString(8);
-			String arrivalDateTime = rs.getString(9);
-
-			Flight flight = new Flight(flightId, icao24, departureAirport, departureDateTime, arrivalDateTime, arrivalAirport);
-			flightList.add(flight);
-		}
-		return flightList;
 	}
 
 
