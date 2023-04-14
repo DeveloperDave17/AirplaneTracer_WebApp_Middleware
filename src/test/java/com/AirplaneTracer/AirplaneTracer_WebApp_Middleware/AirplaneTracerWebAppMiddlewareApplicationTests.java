@@ -1,8 +1,8 @@
 package com.AirplaneTracer.AirplaneTracer_WebApp_Middleware;
 
 import com.AirplaneTracer.AirplaneTracer_WebApp_Middleware.model.Flight;
+import com.AirplaneTracer.AirplaneTracer_WebApp_Middleware.model.Waypoint;
 import com.AirplaneTracer.AirplaneTracer_WebApp_Middleware.repository.FlightRepository;
-import com.AirplaneTracer.AirplaneTracer_WebApp_Middleware.repository.FlightRepositoryImplementation;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -373,6 +373,78 @@ class AirplaneTracerWebAppMiddlewareApplicationTests {
 
 		List<Flight> flightList2 = flightRepository.getFlights(query);
 		assertEquals(flightList,flightList2);
+	}
+
+	//Checks to ensure no waypoints were sent back if no flight ids are sent.
+	@Test
+	void noFlightIds(){
+		Assertions.assertEquals(flightRepository.getWaypoints(new ArrayList<>()).size(),0);
+	}
+
+	// Tests that the expected waypoints were received and that no more than one flight was retrieved
+	@Test
+	void oneFlightId() throws SQLException {
+		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Waypoint WHERE flight_id = ? ORDER BY offset_ms");
+		stmt.setInt(1, 1);
+		ResultSet rs = stmt.executeQuery();
+
+		List<Waypoint> waypoints = new ArrayList<>();
+		while(rs.next()){
+			float latitude = rs.getFloat(2);
+			float longitude = rs.getFloat(3);
+			waypoints.add(new Waypoint(latitude,longitude));
+		}
+
+		List<Integer> flightIds = new ArrayList<>();
+		flightIds.add(1);
+		List<List<Waypoint>> waypointListFromRepository = flightRepository.getWaypoints(flightIds);
+
+		Assertions.assertEquals(waypointListFromRepository.size(),1);
+
+		for (int i = 0; i < waypoints.size(); i++){
+			Assertions.assertEquals(waypoints.get(i).getLatitude(),waypointListFromRepository.get(0).get(i).getLatitude());
+			Assertions.assertEquals(waypoints.get(i).getLongitude(),waypointListFromRepository.get(0).get(i).getLongitude());
+		}
+
+	}
+
+
+	// Tests to see if 50 flights are retrieved properly
+	@Test
+	void retrieveFiftyFlightIds() throws SQLException {
+		List<List<Waypoint>> expectedFlightWaypoints = new ArrayList<>();
+		for (int i = 1; i <= 50; i++) {
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Waypoint WHERE flight_id = ? ORDER BY offset_ms");
+			stmt.setInt(1, i);
+			ResultSet rs = stmt.executeQuery();
+
+			List<Waypoint> waypoints = new ArrayList<>();
+			while (rs.next()) {
+				float latitude = rs.getFloat(2);
+				float longitude = rs.getFloat(3);
+				waypoints.add(new Waypoint(latitude, longitude));
+			}
+
+			expectedFlightWaypoints.add(waypoints);
+		}
+
+		List<Integer> flightIds = new ArrayList<>();
+		for (int i = 1; i <= 50; i++) {
+			flightIds.add(i);
+		}
+		List<List<Waypoint>> waypointListFromRepository = flightRepository.getWaypoints(flightIds);
+
+		Assertions.assertEquals(waypointListFromRepository.size(),expectedFlightWaypoints.size());
+
+		for (int flightId = 1; flightId <= 50; flightId++) {
+			for (int i = 0; i < expectedFlightWaypoints.get(flightId-1).size(); i++) {
+				Assertions.assertEquals(expectedFlightWaypoints.get(flightId-1).get(i).getLatitude(),
+						waypointListFromRepository.get(flightId-1).get(i).getLatitude());
+
+				Assertions.assertEquals(expectedFlightWaypoints.get(flightId-1).get(i).getLongitude(),
+						waypointListFromRepository.get(flightId-1).get(i).getLongitude());
+			}
+		}
 	}
 
 	List<Flight> processResults(ResultSet rs) throws SQLException {
