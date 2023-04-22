@@ -113,7 +113,7 @@ class AirplaneTracerWebAppMiddlewareApplicationTests {
 	@Test
 	void departureBottom() throws SQLException {
 		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE" +
-				" arrival_airport = 'Eppley Airfield'");
+				" departure_airport = 'Eppley Airfield'");
 		ResultSet rs = stmt.executeQuery();
 		List<Flight> flightList = processResults(rs);
 		Query query = new Query("","","","","","",

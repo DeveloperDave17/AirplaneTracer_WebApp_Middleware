@@ -2,12 +2,12 @@ package com.AirplaneTracer.AirplaneTracer_WebApp_Middleware.repository;
 
 import com.AirplaneTracer.AirplaneTracer_WebApp_Middleware.DBUtil;
 import com.AirplaneTracer.AirplaneTracer_WebApp_Middleware.Query;
-import com.AirplaneTracer.AirplaneTracer_WebApp_Middleware.model.Flight;
-import com.AirplaneTracer.AirplaneTracer_WebApp_Middleware.model.Waypoint;
+import com.AirplaneTracer.AirplaneTracer_WebApp_Middleware.model.*;
 import org.hibernate.type.descriptor.DateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -313,6 +313,50 @@ public class FlightRepositoryImplementation implements FlightRepository {
         }
 
         return waypoints;
+    }
+
+    @Override
+    public List<String> getFlightFiles(List<Integer> flightIds){
+
+        // List of files
+        List<String> files = new ArrayList<>();
+
+        for (Integer flightId : flightIds) {
+            try {
+                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Waypoint WHERE flight_id = ? ORDER BY offset_ms");
+                stmt.setInt(1, flightId);
+                ResultSet rs = stmt.executeQuery();
+
+                List<FmlWaypoint> waypoints = new ArrayList<>();
+                while(rs.next()){
+                    String flight_id = rs.getString(1);
+                    double latitude = rs.getDouble(2);
+                    double longitude = rs.getDouble(3);
+                    double altitude = rs.getDouble(4);
+                    int offset_ms = rs.getInt(5);
+                    waypoints.add(new FmlWaypoint(flight_id,longitude,latitude,altitude,offset_ms));
+                }
+
+                PreparedStatement stmt2 = connection.prepareStatement("SELECT * FROM Flight WHERE flight_id = ?");
+                stmt2.setInt(1, flightId);
+                ResultSet rsFlight = stmt2.executeQuery();
+
+                FmlFlight flight;
+                while(rsFlight.next()){
+                    String departureAirport = rsFlight.getString(6);
+                    String arrivalAirport = rsFlight.getString(7);
+                    flight = new FmlFlight(flightId.toString(),departureAirport,arrivalAirport,waypoints);
+
+                    FmlBuilder fmlBuilder = new FmlBuilder(flight);
+                    String fileContents = fmlBuilder.buildFml();
+                    files.add(fileContents);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException();
+            }
+        }
+        System.out.println("YO");
+        return files;
     }
 
     private String getDateTime(Query query){
