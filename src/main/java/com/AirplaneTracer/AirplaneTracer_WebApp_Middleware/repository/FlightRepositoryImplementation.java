@@ -355,7 +355,7 @@ public class FlightRepositoryImplementation implements FlightRepository {
                 throw new RuntimeException();
             }
         }
-        System.out.println("YO");
+
         return files;
     }
 
