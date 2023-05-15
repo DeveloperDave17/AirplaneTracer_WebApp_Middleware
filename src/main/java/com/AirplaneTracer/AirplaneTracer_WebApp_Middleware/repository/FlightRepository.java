@@ -8,6 +8,10 @@ import org.springframework.stereotype.Repository;
 import java.io.File;
 import java.util.List;
 
+/**
+ * An interface the springboot will generate the corresponding class for deriving all the implementation of additional
+ * methods added from the FlightRepositoryImplementation class
+ */
 @Repository
 public interface FlightRepository{
 

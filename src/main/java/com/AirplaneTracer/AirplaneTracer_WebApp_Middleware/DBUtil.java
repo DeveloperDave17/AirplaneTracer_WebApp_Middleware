@@ -11,13 +11,15 @@ public class DBUtil {
     }
 
     public static Connection getConnection() throws SQLException {
-        if (connection != null) {
+
+
+        if (connection != null && connection.isValid(5)) {
             return connection;
         } else {
             String driver = "com.mysql.cj.jdbc.Driver";
-            String url = "jdbc:mysql://moxie.cs.oswego.edu:51260/AirPlaneTracerDB";
-            String user = "dhcskaeaat";
-            String password = "Ch00plane";
+            String url = "";
+            String user = "";
+            String password = "";
 
             try {
                 Class.forName(driver);

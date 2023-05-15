@@ -7,6 +7,7 @@ plugins {
 group = 'com.AirplaneTracer'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
+java.sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
 	mavenCentral()
@@ -22,3 +23,17 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+jar {
+	manifest {
+		attributes "Main-Class": "com.AirplaneTracer.AirplaneTracer_WebApp_Middleware.AirplaneTracerWebAppMiddlewareApplication"
+	}
+
+	from {
+		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+	}
+}
+
+apply plugin: 'application'
+
+mainClassName = 'com.AirplaneTracer.AirplaneTracer_WebApp_Middleware.AirplaneTracerWebAppMiddlewareApplication'

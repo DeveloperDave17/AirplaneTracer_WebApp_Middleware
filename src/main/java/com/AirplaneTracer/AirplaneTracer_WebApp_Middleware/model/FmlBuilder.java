@@ -31,8 +31,8 @@ public class FmlBuilder {
         /*
          * Build assorted components
          */
-        Airport departureAirport = buildAirport(flight.departureAirport);
-        Airport arrivalAirport = buildAirport(flight.arrivalAirport);
+        Airport departureAirport = buildAirport(flight.departureAirport, flight.isDepartureContainsComma());
+        Airport arrivalAirport = buildAirport(flight.arrivalAirport, flight.isArrivalContainsComma());
 
         // build arrayList of waypoint strings
         ArrayList<String> waypointsAsString = new ArrayList<>();
@@ -80,7 +80,7 @@ public class FmlBuilder {
     /*
      * builds an airport object from the csv
      */
-    private Airport buildAirport(String name) {
+    private Airport buildAirport(String name, boolean containsCommas) {
         String[] splitLine = new String[18];
         // parse csv to get the line we want
         try(Scanner scanner = new Scanner(ResourceUtils.getFile("classpath:airportsClosedDeleted.csv"))){
@@ -88,15 +88,26 @@ public class FmlBuilder {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 splitLine = line.split(",");
-                if(splitLine[3].equals(name)){
-                    // grab variables from the line
-                    String ident = splitLine[1];
-                    double alt = 0;
-                            //Double.parseDouble(splitLine[6]);
-                    double lon = Double.parseDouble(splitLine[5]);
-                    double lat = Double.parseDouble(splitLine[4]);
-                    // create and return the Airport
-                    return new Airport(name, ident, lon, lat, alt);
+                if(splitLine[3].contains(name)){
+                    if(!containsCommas) {
+                        // grab variables from the line
+                        String ident = splitLine[1];
+                        double alt = 0;
+                        //Double.parseDouble(splitLine[6]);
+                        double lon = Double.parseDouble(splitLine[5]);
+                        double lat = Double.parseDouble(splitLine[4]);
+                        // create and return the Airport
+                        return new Airport(name, ident, lon, lat, alt);
+                    } else {
+                        // grab variables from the line
+                        String ident = splitLine[1];
+                        double alt = 0;
+                        //Double.parseDouble(splitLine[6]);
+                        double lon = Double.parseDouble(splitLine[6]);
+                        double lat = Double.parseDouble(splitLine[5]);
+                        // create and return the Airport
+                        return new Airport(name, ident, lon, lat, alt);
+                    }
                 }
             }
         } catch (FileNotFoundException e) {

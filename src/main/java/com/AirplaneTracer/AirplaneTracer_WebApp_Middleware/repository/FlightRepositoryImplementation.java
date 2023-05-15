@@ -3,11 +3,8 @@ package com.AirplaneTracer.AirplaneTracer_WebApp_Middleware.repository;
 import com.AirplaneTracer.AirplaneTracer_WebApp_Middleware.DBUtil;
 import com.AirplaneTracer.AirplaneTracer_WebApp_Middleware.Query;
 import com.AirplaneTracer.AirplaneTracer_WebApp_Middleware.model.*;
-import org.hibernate.type.descriptor.DateTimeUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,6 +23,9 @@ public class FlightRepositoryImplementation implements FlightRepository {
         connection = DBUtil.getConnection();
     }
 
+    /**
+     * Handles all the possible queries from the front end.
+     */
     @Override
     public List<Flight> getFlights(Query query) {
 
@@ -35,35 +35,53 @@ public class FlightRepositoryImplementation implements FlightRepository {
 
 
         try {
+
+            // ensure the database connection has not disconnected due to inactivity
+            if(!connection.isValid(5)){
+                connection = DBUtil.getConnection();
+            }
+
             if(query.getFtopDate().equals("")){
+                // No information provided ( returns the entire flight table )
                 if (query.getFtopFairfield().equals("") && query.getFbottomFairfield().equals("")) {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight");
 
                     rs = stmt.executeQuery();
+
+                // Just an arrival airport is provided in the top search field
                 } else if (query.getFbottomFairfield().equals("") && query.getFtopArrival().equals("Arrival")) {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE arrival_airport = ?");
 
                     stmt.setString(1, query.getFtopFairfield());
 
                     rs = stmt.executeQuery();
+
+                // Just an arrival airport is provided in the bottom search field
                 } else if (query.getFtopFairfield().equals("") && query.getFbottomArrival().equals("Arrival")) {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE arrival_airport = ?");
 
                     stmt.setString(1, query.getFbottomFairfield());
 
                     rs = stmt.executeQuery();
+
+                // Only a departing airport is provided in the top search field
                 } else if (query.getFbottomFairfield().equals("") && query.getFtopDeparture().equals("Departure")) {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_airport = ?");
 
                     stmt.setString(1, query.getFtopFairfield());
 
                     rs = stmt.executeQuery();
+
+                // Only a departing airport is provided in the bottom search field
                 } else if (query.getFtopFairfield().equals("") && query.getFbottomDeparture().equals("Departure")) {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_airport = ?");
 
                     stmt.setString(1, query.getFbottomFairfield());
 
                     rs = stmt.executeQuery();
+
+                // An arrival airport is provided in the top search field and a departing airport is provided in the
+                // bottom search field.
                 } else if (query.getFtopArrival().equals("Arrival") && query.getFbottomDeparture().equals("Departure")) {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE " +
                             "arrival_airport = ? AND departure_airport = ?");
@@ -73,6 +91,9 @@ public class FlightRepositoryImplementation implements FlightRepository {
 
 
                     rs = stmt.executeQuery();
+
+                // A departing airport is provided in the top search field and an arrival airport is provided in the
+                // bottom search field.
                 } else if (query.getFtopDeparture().equals("Departure") && query.getFbottomArrival().equals("Arrival")) {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE " +
                             "arrival_airport = ? AND departure_airport = ?");
@@ -82,6 +103,9 @@ public class FlightRepositoryImplementation implements FlightRepository {
 
 
                     rs = stmt.executeQuery();
+
+                // A "both" airfield is provided in top slot. Flights that either arrive or depart from this
+                // airport are returned.
                 } else {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE" +
                             " arrival_airport = ? OR departure_airport = ?");
@@ -100,6 +124,7 @@ public class FlightRepositoryImplementation implements FlightRepository {
                 String datetimeLowerBound = getDateLowerBound(query);
                 String datetimeUpperBound = getDateUpperBound(query);
 
+                // Only a date is provided. All flights from the date are returned
                 if (query.getFtopFairfield().equals("") && query.getFbottomFairfield().equals("")) {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE (departure_datetime >= ?" +
                             " AND departure_datetime <= ?) OR ( arrival_datetime >= ? AND arrival_datetime <= ?)");
@@ -110,6 +135,8 @@ public class FlightRepositoryImplementation implements FlightRepository {
                     stmt.setString(4, datetimeUpperBound);
 
                     rs = stmt.executeQuery();
+
+                // An arrival airfield is provided in the top search field with a date criteria.
                 } else if (query.getFbottomFairfield().equals("") && query.getFtopArrival().equals("Arrival")) {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE arrival_datetime >= ?" +
                             "AND arrival_datetime <= ? AND arrival_airport = ?");
@@ -119,6 +146,8 @@ public class FlightRepositoryImplementation implements FlightRepository {
                     stmt.setString(3, query.getFtopFairfield());
 
                     rs = stmt.executeQuery();
+
+                // An arrival airport is provided in the bottom search field with a date criteria
                 } else if (query.getFtopFairfield().equals("") && query.getFbottomArrival().equals("Arrival")) {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE arrival_datetime >= ?" +
                             "AND arrival_datetime <= ? AND arrival_airport = ?");
@@ -128,6 +157,8 @@ public class FlightRepositoryImplementation implements FlightRepository {
                     stmt.setString(3, query.getFbottomFairfield());
 
                     rs = stmt.executeQuery();
+
+                // A departing airport is provided in the top search field with a date criteria
                 } else if (query.getFbottomFairfield().equals("") && query.getFtopDeparture().equals("Departure")) {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime >= ?" +
                             "AND departure_datetime <= ? AND departure_airport = ?");
@@ -137,6 +168,8 @@ public class FlightRepositoryImplementation implements FlightRepository {
                     stmt.setString(3, query.getFtopFairfield());
 
                     rs = stmt.executeQuery();
+
+                // A departing airport is provided in the bottom search field with a date criteria
                 } else if (query.getFtopFairfield().equals("") && query.getFbottomDeparture().equals("Departure")) {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime >= ?" +
                             "AND departure_datetime <= ? AND departure_airport = ?");
@@ -146,6 +179,9 @@ public class FlightRepositoryImplementation implements FlightRepository {
                     stmt.setString(3, query.getFbottomFairfield());
 
                     rs = stmt.executeQuery();
+
+                // An arrival airport is provided in the top search field and a departing airport in the bottom search
+                // field with a date criteria
                 } else if (query.getFtopArrival().equals("Arrival") && query.getFbottomDeparture().equals("Departure")) {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE arrival_datetime >= ?" +
                             "AND arrival_datetime <= ? AND arrival_airport = ? AND departure_airport = ?");
@@ -157,6 +193,9 @@ public class FlightRepositoryImplementation implements FlightRepository {
 
 
                     rs = stmt.executeQuery();
+
+                // A departing airport is provided in the top search field and an arrival airport is provided in the
+                // bottom search field with a date criteria
                 } else if (query.getFtopDeparture().equals("Departure") && query.getFbottomArrival().equals("Arrival")) {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime >= ?" +
                             "AND departure_datetime <= ? AND arrival_airport = ? AND departure_airport = ?");
@@ -168,6 +207,8 @@ public class FlightRepositoryImplementation implements FlightRepository {
 
 
                     rs = stmt.executeQuery();
+
+                // A "both" airfield is provided in the top search field with a date criteria
                 } else {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime >= ?" +
                             "AND departure_datetime <= ? AND (arrival_airport = ? OR departure_airport = ?)");
@@ -183,6 +224,7 @@ public class FlightRepositoryImplementation implements FlightRepository {
 
                 String datetime = getDateTime(query);
 
+                // A date and time are provided
                 if (query.getFtopFairfield().equals("") && query.getFbottomFairfield().equals("")) {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime <= ?" +
                             "AND arrival_datetime >= ?");
@@ -191,6 +233,8 @@ public class FlightRepositoryImplementation implements FlightRepository {
                     stmt.setString(2, datetime);
 
                     rs = stmt.executeQuery();
+
+                // An arrival airport is provided in the top search field with a date and time
                 } else if (query.getFbottomFairfield().equals("") && query.getFtopArrival().equals("Arrival")) {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime <= ?" +
                             "AND arrival_datetime >= ? AND arrival_airport = ?");
@@ -200,6 +244,8 @@ public class FlightRepositoryImplementation implements FlightRepository {
                     stmt.setString(3, query.getFtopFairfield());
 
                     rs = stmt.executeQuery();
+
+                // An arrival airport is provided in the bottom search field with a date and time
                 } else if (query.getFtopFairfield().equals("") && query.getFbottomArrival().equals("Arrival")) {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime <= ?" +
                             "AND arrival_datetime >= ? AND arrival_airport = ?");
@@ -209,6 +255,8 @@ public class FlightRepositoryImplementation implements FlightRepository {
                     stmt.setString(3, query.getFbottomFairfield());
 
                     rs = stmt.executeQuery();
+
+                // A departure airport is provided in the top search field with a date and time
                 } else if (query.getFbottomFairfield().equals("") && query.getFtopDeparture().equals("Departure")) {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime <= ?" +
                             "AND arrival_datetime >= ? AND departure_airport = ?");
@@ -218,6 +266,8 @@ public class FlightRepositoryImplementation implements FlightRepository {
                     stmt.setString(3, query.getFtopFairfield());
 
                     rs = stmt.executeQuery();
+
+                // A departure airport is provided in the bottom search field with a date and time
                 } else if (query.getFtopFairfield().equals("") && query.getFbottomDeparture().equals("Departure")) {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime <= ?" +
                             "AND arrival_datetime >= ? AND departure_airport = ?");
@@ -227,6 +277,9 @@ public class FlightRepositoryImplementation implements FlightRepository {
                     stmt.setString(3, query.getFbottomFairfield());
 
                     rs = stmt.executeQuery();
+
+                // An arrival airport is provided in top search field and a departure airport in the bottom search field
+                // with a date and time
                 } else if (query.getFtopArrival().equals("Arrival") && query.getFbottomDeparture().equals("Departure")) {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime <= ?" +
                             "AND arrival_datetime >= ? AND arrival_airport = ? AND departure_airport = ?");
@@ -238,6 +291,9 @@ public class FlightRepositoryImplementation implements FlightRepository {
 
 
                     rs = stmt.executeQuery();
+
+                // A departure airport is provided in the top search field and an arrival airport in the bottom search
+                // field with a date and time
                 } else if (query.getFtopDeparture().equals("Departure") && query.getFbottomArrival().equals("Arrival")) {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime <= ?" +
                             "AND arrival_datetime >= ? AND arrival_airport = ? AND departure_airport = ?");
@@ -249,6 +305,8 @@ public class FlightRepositoryImplementation implements FlightRepository {
 
 
                     rs = stmt.executeQuery();
+
+                // a "both" airfield is provided with a date and time
                 } else {
                     PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Flight WHERE departure_datetime <= ?" +
                             "AND arrival_datetime >= ? AND (arrival_airport = ? OR departure_airport = ?)");
@@ -262,6 +320,7 @@ public class FlightRepositoryImplementation implements FlightRepository {
                 }
             }
 
+            // Iterate through the flights that matched the search criteria and create flight objects to return
             while(rs.next()){
                 int flightId = rs.getInt(1);
                 String icao24 = rs.getString(2);
@@ -287,12 +346,21 @@ public class FlightRepositoryImplementation implements FlightRepository {
 
     }
 
+    /**
+     * Iterates through all the flight ids creating a list of waypoints for each id, then returning a list of all
+     * the lists of waypoints found.
+     */
     @Override
     public List<List<Waypoint>> getWaypoints(List<Integer> flightIds){
         List<List<Waypoint>> waypoints = new ArrayList<>();
         int flightNum = 0;
         for (Integer flightId : flightIds) {
             try {
+
+                if(!connection.isValid(5)){
+                    connection = DBUtil.getConnection();
+                }
+
                 PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Waypoint WHERE flight_id = ? ORDER BY offset_ms");
                 stmt.setInt(1, flightId);
                 ResultSet rs = stmt.executeQuery();
@@ -315,6 +383,9 @@ public class FlightRepositoryImplementation implements FlightRepository {
         return waypoints;
     }
 
+    /**
+     * Returns a list of the strings with each string containing all the contents of a flight plan file (fml)
+     */
     @Override
     public List<String> getFlightFiles(List<Integer> flightIds){
 
@@ -323,6 +394,12 @@ public class FlightRepositoryImplementation implements FlightRepository {
 
         for (Integer flightId : flightIds) {
             try {
+
+                // ensures the connection is still valid and not disconnected due to inactivity
+                if(!connection.isValid(5)){
+                    connection = DBUtil.getConnection();
+                }
+
                 PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Waypoint WHERE flight_id = ? ORDER BY offset_ms");
                 stmt.setInt(1, flightId);
                 ResultSet rs = stmt.executeQuery();
@@ -345,7 +422,9 @@ public class FlightRepositoryImplementation implements FlightRepository {
                 while(rsFlight.next()){
                     String departureAirport = rsFlight.getString(6);
                     String arrivalAirport = rsFlight.getString(7);
-                    flight = new FmlFlight(flightId.toString(),departureAirport,arrivalAirport,waypoints);
+                    boolean departureContainsComma = departureAirport.contains(",");
+                    boolean arrivalContainsComma = arrivalAirport.contains(",");
+                    flight = new FmlFlight(flightId.toString(),departureAirport.split(",")[0],arrivalAirport.split(",")[0],waypoints,departureContainsComma,arrivalContainsComma);
 
                     FmlBuilder fmlBuilder = new FmlBuilder(flight);
                     String fileContents = fmlBuilder.buildFml();
